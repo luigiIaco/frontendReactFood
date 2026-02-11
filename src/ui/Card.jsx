@@ -28,7 +28,7 @@ const Card = ({ item, generaPrezzo, cartStatus, setCartStatus }) => {
   };
 
   const limitaA20Lettere = (str) =>
-    str.length > 20 ? str.slice(0, 24) + "..." : str;
+    str.length > 20 ? str.slice(0, 10) + "..." : str;
 
   const increase = () => setAmount((prev) => prev + 1);
   const decrease = () => setAmount((prev) => (prev > 1 ? prev - 1 : 1));
@@ -93,6 +93,7 @@ const QuantityWrapper = styled.div`
 `;
 
 const WrapperCard = styled.div`
+  height: 400px;
   background-color: white;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);

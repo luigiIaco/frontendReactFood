@@ -10,23 +10,19 @@ import { NavLink } from "react-router-dom";
 const Category = () => {
   return (
     <List>
-      <Slink to={"/home"}>
-        <CiHome />
-        <h4>Home</h4>
-      </Slink>
-      <Slink to={"cucina/italian"}>
+      <Slink to={"/cucina/italian"}>
         <CiPizza />
         <h4>Italian</h4>
       </Slink>
-      <Slink to={"cucina/american"}>
+      <Slink to={"/cucina/american"}>
         <PiHamburger />
         <h4>American</h4>
       </Slink>
-      <Slink to={"cucina/japanese"}>
+      <Slink to={"/cucina/japanese"}>
         <GiSushis />
         <h4>Japanese</h4>
       </Slink>
-      <Slink to={"cucina/thai"}>
+      <Slink to={"/cucina/thai"}>
         <WiNightAltHail />
         <h4>Thai</h4>
       </Slink>
@@ -35,45 +31,36 @@ const Category = () => {
 };
 
 const List = styled.div`
-  margin: 2rem 0rem;
   display: flex;
   justify-content: center;
-  overflow: hidden;
+  gap: 1.5rem;
+  padding: 2rem 0;
+  flex-wrap: wrap;
 `;
 
 const Slink = styled(NavLink)`
-  margin-right: 10px;
-  text-decoration: none;
-  border: 1px solid black;
-  border-radius: 50%;
-  width: 100px;
-  height: 90px;
-  padding-top: 20px;
-  background: #2a7b9b;
-  background: linear-gradient(
-    90deg,
-    rgba(42, 123, 155, 1) 0%,
-    rgba(94, 218, 133, 1) 0%,
-    rgba(178, 237, 83, 1) 64%
-  );
-  color: black;
-  text-align: center;
-
-  svg {
-    width: 100%;
-  }
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 50px;
+  transition: all 0.3s;
+  
+  h4 { font-size: 0.9rem; color: #6b7280; }
+  svg { font-size: 1.2rem; color: #6b7280; }
 
   &.active {
-    background: linear-gradient(
-      90deg,
-      rgba(178, 237, 83, 1) 0%,
-      rgba(94, 218, 133, 1) 50%,
-      rgba(42, 123, 155, 1) 100%
-    );
+    background: #5b8c5a;
+    border-color: #5b8c5a;
+    h4, svg { color: white; }
+    box-shadow: 0 4px 12px rgba(91, 140, 90, 0.3);
   }
 
-  &:hover {
-    transform: scale(0.9);
+  &:hover:not(.active) {
+    background: #f3f4f6;
+    transform: translateY(-2px);
   }
 `;
 

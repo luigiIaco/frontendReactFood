@@ -20,22 +20,17 @@ import ProtectedRoute from "./auth/ProtectedRoute";
 import ForgotPassword from "./components/pages/ForgotPassword";
 import ResetPassword from "./components/pages/ResetPassword";
 import { CartProvider } from "./Context/CartContext";
+import UserProfile from "./components/pages/UserProfile";
+import Navbar from "./components/pages/Navbar";
+import AboutUs from "./components/pages/AboutUs";
 
 function App() {
   const location = useLocation();
-  const showMenu =
-    location.pathname !== "/404" &&
-    location.pathname !== "/login" &&
-    location.pathname !== "/register" &&
-    location.pathname !== "/cart" &&
-    location.pathname !== "/forgotPassword" &&
-    location.pathname !== "/resetPassword" &&
-    location.pathname !== "/home";
-
+  const user = JSON.parse(localStorage.getItem("user"));
 
   return (
     <>
-      {showMenu && <Menu />}
+      <Navbar user={user} />
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route
@@ -47,8 +42,13 @@ function App() {
           }
         />
         <Route path="/register" element={<Register />} />
+        <Route path="/aboutUs" element={<AboutUs/>} />
+        <Route path="/userProfile" element={<UserProfile user={user} />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
-        <Route path="/cucina" element={<Navigate to="/cucina/italian" replace />} />
+        <Route
+          path="/cucina"
+          element={<Navigate to="/cucina/italian" replace />}
+        />
         <Route path="/resetPassword" element={<ResetPassword />} />
         <Route path="/login" element={<Login />} />
         <Route
