@@ -50,7 +50,7 @@ const Navbar = ({ user }) => {
           </div>
 
           {/* LATO DESTRO: Logout e Profilo */}
-          {authToken ? (
+          {authToken && (
             <div className="flex items-center gap-2 sm:gap-6">
               {/* Profilo */}
               <div
@@ -79,14 +79,6 @@ const Navbar = ({ user }) => {
                 <LogOut size={22} />
               </button>
             </div>
-          ) : (
-            /* Se non loggato, mostra tasto Login */
-            <button
-              onClick={() => navigate("/login")}
-              className="bg-emerald-500 hover:bg-emerald-400 text-slate-900 px-5 py-2 rounded-xl font-bold text-sm transition-all"
-            >
-              Accedi
-            </button>
           )}
         </div>
       </div>
