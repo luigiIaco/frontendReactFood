@@ -9,7 +9,6 @@ import Home from "./components/pages/Home";
 import "@splidejs/react-splide/css";
 import Cucina from "./components/pages/Cucina";
 import Error404 from "./components/error/Error404";
-import Menu from "./components/menu/Menu";
 import React from "react";
 import Searched from "./components/pages/Searched";
 import Details from "./components/pages/Details";
@@ -23,9 +22,10 @@ import { CartProvider } from "./Context/CartContext";
 import UserProfile from "./components/pages/UserProfile";
 import Navbar from "./components/pages/Navbar";
 import AboutUs from "./components/pages/AboutUs";
+import Checkout from "./components/pages/Checkout";
+import OrderSummary from "./components/pages/OrderSummary";
 
 function App() {
-  const location = useLocation();
   const user = JSON.parse(localStorage.getItem("user"));
 
   return (
@@ -42,7 +42,30 @@ function App() {
           }
         />
         <Route path="/register" element={<Register />} />
-        <Route path="/aboutUs" element={<AboutUs/>} />
+        <Route
+          path="/aboutUs"
+          element={
+            <ProtectedRoute>
+              <AboutUs />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <Checkout />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orderSummary"
+          element={
+            <ProtectedRoute>
+              <OrderSummary />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/userProfile" element={<UserProfile user={user} />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route

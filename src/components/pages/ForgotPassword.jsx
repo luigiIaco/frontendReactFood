@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { recoveryPasswordByEmail } from "../../service/users/users.service";
-import { FaArrowRightLong } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import { Mail, ArrowLeft, Send, CheckCircle } from "lucide-react";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -10,175 +10,238 @@ const ForgotPassword = () => {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleChange = async (e) => {
-    setEmail(e.target.value);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError("");
+    setSuccess("");
     try {
       const data = await recoveryPasswordByEmail(email);
-      setSuccess(data.message);
+      setSuccess(data.message || "Email di recupero inviata con successo!");
       setLoading(false);
     } catch (e) {
-      setError(e.message);
+      setError(e.message || "Errore durante l'invio dell'email.");
       setLoading(false);
     }
   };
 
   return (
-    <>
-      <Wrapper>
-        <form className="login-form" onSubmit={handleSubmit}>
-          <h2>Recovery password</h2>
-          {error && <ErrorMessage>{error}</ErrorMessage>}
-          {success && <SuccessMessage>{success}</SuccessMessage>}
-          <input
-            type="email"
-            name="email"
-            placeholder="Inserisci l'email associata all'utente"
-            value={email}
-            onChange={handleChange}
-            required
-          />
-          <SubmitButton type="submit" disabled={loading}>
-            {loading ? "Recovering..." : "Recovery password"}
-          </SubmitButton>
-        </form>
-        <RedirectLoginWrapper>
-          <Link to={"/login"}>Back to Login page</Link> <FaArrowRightLong />
-        </RedirectLoginWrapper>
-      </Wrapper>
-    </>
+    <Container>
+      <RecoveryBox>
+        <Header>
+          <IconWrapper>
+            <Mail size={28} />
+          </IconWrapper>
+          <h2>Recupera Password</h2>
+          <p>Ti invieremo un link per impostare una nuova password</p>
+        </Header>
+
+        {error && <ErrorMessage>{error}</ErrorMessage>}
+        
+        {success ? (
+          <SuccessContent>
+            <div className="status-icon">
+              <CheckCircle size={48} style={{margin: "0 auto"}} />
+            </div>
+            <p>{success}</p>
+          </SuccessContent>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <InputGroup>
+              <Mail size={18} className="input-icon" />
+              <input
+                type="email"
+                placeholder="Inserisci la tua email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </InputGroup>
+
+            <SubmitButton type="submit" disabled={loading}>
+              {loading ? "Invio in corso..." : (
+                <>
+                  Invia Link <Send size={18} style={{ marginLeft: "8px" }} />
+                </>
+              )}
+            </SubmitButton>
+          </form>
+        )}
+
+        <Footer>
+          <Link to="/login">
+            <ArrowLeft size={16} /> Torna alla pagina di Login
+          </Link>
+        </Footer>
+      </RecoveryBox>
+    </Container>
   );
 };
 
-const Wrapper = styled.div`
+// --- STYLED COMPONENTS (Emerald Theme) ---
+
+const Container = styled.div`
+  min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  height: 95vh;
-
-  .login-form {
-    width: 100%;
-    max-width: 400px;
-    background-color: rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px); /* Per Safari */
-    padding: 32px;
-    border-radius: 16px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.1); /* Ombra "a doppio livello" */
-    font-family: "Segoe UI", sans-serif;
-  }
-
-  .login-form h2 {
-    text-align: center;
-    margin-bottom: 6px;
-    color: #333;
-  }
-
-  .login-form input[type="email"] {
-    width: 100%;
-    padding: 12px 14px;
-    margin-bottom: 16px;
-    border: 1px solid black;
-    border-radius: 8px;
-    font-size: 15px;
-    transition: border-color 0.3s ease;
-  }
-
-  .login-form input:focus {
-    border-color: #007bff;
-    outline: none;
-  }
-
-  .login-form button {
-    width: 100%;
-    padding: 12px;
-    background-color: #007bff;
-    border: none;
-    color: white;
-    font-size: 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .login-form button:hover {
-    background-color: #0056b3;
-  }
-
-  .login-form .message {
-    text-align: center;
-    margin-top: 16px;
-    font-size: 14px;
-    color: #666;
-  }
-
-  .login-form .footer {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 14px;
-  }
-
-  .login-form .footer a {
-    color: #007bff;
-    text-decoration: none;
-  }
-
-  .login-form .footer a:hover {
-    text-decoration: underline;
-  }
-`;
-
-const RedirectLoginWrapper = styled.div`
-  display: flex;
   justify-content: center;
-  margin-top: 15px;
-  svg {
-    margin-top: 4px;
-    margin-left: 6px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  padding: 20px;
+`;
+
+const RecoveryBox = styled.div`
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  padding: 40px;
+  border-radius: 32px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f1f5f9;
+`;
+
+const Header = styled.div`
+  text-align: center;
+  margin-bottom: 32px;
+
+  h2 {
+    font-size: 1.75rem;
+    color: #0f172a;
+    font-weight: 800;
+    margin-top: 16px;
+    letter-spacing: -0.025em;
+  }
+
+  p {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-top: 8px;
+    line-height: 1.5;
   }
 `;
 
-const ErrorMessage = styled.div`
-  padding: 10px;
-  margin-bottom: 10px;
-  background-color: #dc3545;
-  color: white;
-  border-radius: 5px;
-  text-align: center;
+const IconWrapper = styled.div`
+  width: 64px;
+  height: 64px;
+  background: #f0fdf4;
+  color: #10b981;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
 `;
 
-const SuccessMessage = styled.div`
-  padding: 10px;
-  margin-bottom: 10px;
-  background-color: green;
-  color: white;
-  border-radius: 5px;
-  text-align: center;
+const InputGroup = styled.div`
+  position: relative;
+  margin-bottom: 24px;
+
+  .input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    pointer-events: none;
+  }
+
+  input {
+    width: 100%;
+    padding: 14px 16px 14px 48px;
+    border: 2px solid #f1f5f9;
+    border-radius: 16px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background: #f8fafc;
+    color: #1e293b;
+
+    &:focus {
+      outline: none;
+      border-color: #10b981;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.08);
+    }
+  }
 `;
 
 const SubmitButton = styled.button`
   width: 100%;
-  padding: 12px;
-  background-color: #007bff;
-  border: none;
+  padding: 16px;
+  background: #10b981;
   color: white;
-  font-size: 16px;
-  border-radius: 8px;
+  border: none;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
-    background-color: #0056b3;
+    background: #059669;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 20px -5px rgba(16, 185, 129, 0.3);
   }
 
   &:disabled {
-    background-color: #cccccc;
+    background: #cbd5e1;
     cursor: not-allowed;
+    transform: none;
+  }
+`;
+
+const ErrorMessage = styled.div`
+  background: #fef2f2;
+  color: #dc2626;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #fee2e2;
+  margin-bottom: 24px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+`;
+
+const SuccessContent = styled.div`
+  text-align: center;
+  
+  .status-icon {
+    color: #10b981;
+    margin-bottom: 16px;
+  }
+
+  p {
+    color: #1e293b;
+    font-weight: 500;
+  }
+
+  .back-link {
+    display: inline-block;
+    color: #10b981;
+    font-weight: 700;
+    text-decoration: underline;
+  }
+`;
+
+const Footer = styled.div`
+  margin-top: 32px;
+  text-align: center;
+
+  a {
+    color: #64748b;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: color 0.2s;
+
+    &:hover {
+      color: #10b981;
+    }
   }
 `;
 
