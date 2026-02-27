@@ -9,10 +9,14 @@ import {
   ShoppingBag,
   ArrowRight,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { removeAllCart } from "../../service/recipes/recipes.service";
 
 const Checkout = () => {
   const bill = localStorage.getItem("total");
+  const user = JSON.parse(localStorage.getItem("user"));
+  const username = user?.username;
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
@@ -28,14 +32,11 @@ const Checkout = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-  //   setTimeout(() => {
-  //     alert("Pagamento effettuato con successo!");
-  //     setLoading(false);
-  //   }, 2000);
-  // };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await removeAllCart({ username: username });
+    navigate("/orderSummary");
+  };
 
   return (
     <Container>
@@ -47,7 +48,7 @@ const Checkout = () => {
             <p>Completa l'ordine inserendo i dati richiesti</p>
           </Header>
 
-          <form action="/orderSummary">
+          <form onSubmit={handleSubmit}>
             <SectionTitle>
               <Truck size={20} /> Informazioni di Spedizione
             </SectionTitle>
