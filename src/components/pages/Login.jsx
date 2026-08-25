@@ -74,7 +74,7 @@ const Form = () => {
         Cookies.remove("rememberCredential");
       }
 
-      navigate("/home");
+      window.location.href = "/home";
     } catch (err) {
       setError("Credenziali non valide. Riprova.");
     } finally {
